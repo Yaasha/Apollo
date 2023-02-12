@@ -132,3 +132,4 @@ notebooks/
 .vscode/
 *.pth
 charts/
+state.json
