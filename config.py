@@ -10,6 +10,8 @@ API_SECRET = os.getenv("API_SECRET")
 API_BASE_URL = os.getenv("API_BASE_URL")
 DATA_URL = os.getenv("DATA_URL")
 
+DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
+
 last_business_day = date.today() - BDay(1)
 days_ago = lambda x: (last_business_day - timedelta(days=x)).strftime("%Y-%m-%d")
 

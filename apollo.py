@@ -40,6 +40,8 @@ import fire
 from datetime import date, datetime, timezone
 import alpaca_trade_api as tradeapi
 import time
+from notifications.discord import send_daily_performance_notification
+import os
 
 
 class Apollo(object):
@@ -193,6 +195,8 @@ class Apollo(object):
         ax.xaxis.set_major_formatter(ticker.FixedFormatter([""] + x_labels[::78]))
 
         plt.legend(fontsize=10.5)
+        if not os.path.isdir("charts"):
+            os.makedirs("charts")
         plt.savefig("charts/papertrading_stock.png")
 
     def run(self):
@@ -234,6 +238,7 @@ class Apollo(object):
             print("Start trading...")
             self.trade()
             self.plot_performance()
+            send_daily_performance_notification()
 
 
 if __name__ == "__main__":
