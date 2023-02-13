@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  apollo:
+    build: .
+    env_file:
+      - .env

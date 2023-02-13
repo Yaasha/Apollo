@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from pandas.tseries.offsets import BDay
 from dotenv import load_dotenv
 import os
 
@@ -9,7 +10,8 @@ API_SECRET = os.getenv("API_SECRET")
 API_BASE_URL = os.getenv("API_BASE_URL")
 DATA_URL = os.getenv("DATA_URL")
 
-days_ago = lambda x: (date.today() - timedelta(days=x)).strftime("%Y-%m-%d")
+last_business_day = date.today() - BDay(1)
+days_ago = lambda x: (last_business_day - timedelta(days=x)).strftime("%Y-%m-%d")
 
 TRAIN_START_DATE = days_ago(18)
 TRAIN_END_DATE = days_ago(3)

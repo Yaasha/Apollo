@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 from __future__ import annotations
+import warnings
+
+warnings.filterwarnings("ignore")
 
 from finrl.config_tickers import DOW_30_TICKER
 from finrl.config import INDICATORS
@@ -103,8 +106,10 @@ class Apollo(object):
         )
         cummulative_return_erl = (account_value_erl[-1] / account_value_erl[0]) - 1
 
-        if cummulative_return_erl > 0:
-            print("Trained model is profitable. Retraining model...")
+        if cummulative_return_erl > 0 or self.last_train_date is None:
+            print(
+                "Trained model is profitable or model is missing. Retraining model..."
+            )
 
             # train on all data
             train(
@@ -200,9 +205,12 @@ class Apollo(object):
 
         while True:
             # Check if market is open or opening in 2 hours or less. Wait 5 mins if not.
+            clock = self.alpaca.get_clock()
+            openingTime = clock.next_open.replace(tzinfo=timezone.utc).timestamp()
+            currTime = clock.timestamp.replace(tzinfo=timezone.utc).timestamp()
+            timeToOpen = int((openingTime - currTime) / 60)
             isOpen = self.alpaca.get_clock().is_open
-            timeToOpen = None
-            while not isOpen and (not timeToOpen or timeToOpen > 120):
+            while not isOpen and timeToOpen > 120:
                 print(f"Market is closed. {timeToOpen} mins till open. Waiting 5 mins.")
                 time.sleep(60 * 5)
 

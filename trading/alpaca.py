@@ -348,7 +348,10 @@ class AlpacaPaperTrading:
 
     def submitOrder(self, qty, stock, side, resp, target_qty):
         if self.fractional_shares:
+            price = self.price[self.stockUniverse.index(stock)]
             qty = round(qty, 2)
+            if price * qty < 1:  # fractional shares require at lest $1 order value
+                qty = 0
         else:
             qty = int(qty)
         if qty > 0:
